@@ -1,0 +1,9 @@
+﻿services:
+  db:
+    image: postgres:latest
+    container_name: db
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${ env.POSTGRES_PASSWORD }
+    ports:
+      - "5432:5432"
