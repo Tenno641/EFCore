@@ -1,9 +1,16 @@
+using EFCore.API.Data;
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();  
+builder.Services.AddOpenApi();
+
+builder.Services.AddDbContext<MoviesContext>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres"));
+});
 
 var app = builder.Build();
 

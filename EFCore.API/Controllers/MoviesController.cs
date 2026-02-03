@@ -1,5 +1,7 @@
+using EFCore.API.Data;
 using EFCore.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EFCore.API.Controllers;
 
@@ -7,11 +9,16 @@ namespace EFCore.API.Controllers;
 [Route("[controller]")]
 public class MoviesController : Controller
 {
+    private readonly MoviesContext _moviesContext;
+    public MoviesController(MoviesContext moviesContext)
+    {
+        _moviesContext = moviesContext;
+    } 
     [HttpGet]
     [ProducesResponseType(typeof(List<Movie>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll()
     {
-        throw new NotImplementedException();
+        return Ok(await _moviesContext.Movies.ToListAsync());
     }
 
     [HttpGet("{id:int}")]
