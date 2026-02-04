@@ -19,7 +19,11 @@ public class MoviesController : Controller
     [ProducesResponseType(typeof(List<Movie>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(await _moviesContext.Movies.ToListAsync());
+        var movies = await _moviesContext.Movies
+            .Include(movie => movie.Genre)
+            .ToListAsync();
+
+        return Ok(movies);
     }
 
     [HttpGet("{id:int}")]
@@ -27,7 +31,9 @@ public class MoviesController : Controller
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Get([FromRoute] int id)
     {
-        Movie? movie = await _moviesContext.Movies.FirstOrDefaultAsync(movie => movie.Id == id);
+        Movie? movie = await _moviesContext.Movies
+            .Include(movie => movie.Genre)
+            .FirstOrDefaultAsync(movie => movie.Id == id);
         
         if (movie is null)
             return NotFound();
@@ -40,6 +46,7 @@ public class MoviesController : Controller
     public async Task<IActionResult> GetYear(int year)
     {
         List<MovieTitle> movieTitles = await _moviesContext.Movies
+            .Include(movie => movie.Genre)
             .Where(movie => movie.ReleaseDate.Year == year)
             .Select(movie => new MovieTitle() { Id = movie.Id, Title = movie.Title })
             .ToListAsync();
