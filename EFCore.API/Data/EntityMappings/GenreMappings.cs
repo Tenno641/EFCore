@@ -12,5 +12,21 @@ public class GenreMappings : IEntityTypeConfiguration<Genre>
         builder
             .Property(genre => genre.Name)
             .HasMaxLength(128);
+        
+        Seed(builder);
+    }
+    private void Seed(EntityTypeBuilder<Genre> builder)
+    {
+        builder.HasData(new Genre()
+        {
+            Id = 1,
+            Name = "Defined-Name"
+        });
+
+        builder.HasData(new Genre()
+        {
+            Id = 2,
+            Name = "Defined-Name"
+        });
     }
 }

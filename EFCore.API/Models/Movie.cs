@@ -8,10 +8,20 @@ public class Movie
     public string? Title { get; set; }    
     public DateTime ReleaseDate { get; set; }
     public string? Synopsis { get; set; }
+    public AgeRating AgeRating { get; set; }
     
+    // Navigation properties 
     [JsonIgnore]
     public Genre Genre { get; set; }
+    // Foreign keys
     public int GenreId { get; set; }
+}
+
+public enum AgeRating
+{
+    Adult = 18,
+    Kids = 6,
+    HighSchool = 16
 }
 
 public class MovieTitle
