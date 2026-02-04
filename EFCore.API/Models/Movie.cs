@@ -8,11 +8,13 @@ public class Movie
     public string? Title { get; set; }    
     public DateTime ReleaseDate { get; set; }
     public string? Synopsis { get; set; }
-    public AgeRating AgeRating { get; set; }
+    public AgeRating? AgeRating { get; set; }
     
+    public Person? Director { get; set; }
+    public ICollection<Person>? Actors { get; set; }
     // Navigation properties 
     [JsonIgnore]
-    public Genre Genre { get; set; }
+    public Genre? Genre { get; set; }
     // Foreign keys
     public int GenreId { get; set; }
 }
@@ -28,4 +30,10 @@ public class MovieTitle
 {
     public int Id { get; set; }
     public string? Title { get; set; }
+}
+
+public class Person
+{
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
 }

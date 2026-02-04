@@ -26,4 +26,15 @@ public class GenreController : Controller
 
         return Ok(movies);
     }
+
+    [HttpPost]
+    [ProducesResponseType(typeof(Genre), StatusCodes.Status201Created)]
+    public async Task<IActionResult> Post(Genre genre)
+    {
+        await _moviesContext.Genres.AddAsync(genre);
+
+        await _moviesContext.SaveChangesAsync();
+        
+        return CreatedAtAction(nameof(Get), new { genre.Id }, genre);
+    }
 }

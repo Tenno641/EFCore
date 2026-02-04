@@ -33,8 +33,14 @@ public class MovieMappings : IEntityTypeConfiguration<Movie>
             .HasColumnType("char(8)")
             .HasConversion(dateTimeValue => dateTimeValue.ToString(DateTimeFormat, CultureInfo.InvariantCulture),
                 dateTimeValue => DateTime.ParseExact(dateTimeValue, DateTimeFormat, CultureInfo.InvariantCulture));
+
+        builder
+            .OwnsOne(movie => movie.Director)
+            .ToTable("Directors");
+
+        builder
+            .OwnsMany(movie => movie.Actors);
         
-        Seed(builder);
 
         /* Custom Convertor
         builder
@@ -45,7 +51,7 @@ public class MovieMappings : IEntityTypeConfiguration<Movie>
     }
     private void Seed(EntityTypeBuilder<Movie> builder)
     {
-        builder.HasData(new Movie()
+        builder.HasData(new Movie
         {
             Id = 1,
             ReleaseDate = new DateTime(1999, 5, 25),
@@ -62,7 +68,16 @@ public class MovieMappings : IEntityTypeConfiguration<Movie>
             Synopsis = "Defined-Data",
             Title = "Defined-Title",
             GenreId = 2,
-            AgeRating = AgeRating.Kids
+            AgeRating = AgeRating.Kids,
+        });
+
+        builder
+        .OwnsOne(movie => movie.Director)
+        .HasData(new
+        {
+            MovieId = 1,
+            FirstName = "Defined",
+            LastName = "-Director"
         });
     }
 }

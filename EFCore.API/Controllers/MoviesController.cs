@@ -54,12 +54,14 @@ public class MoviesController : Controller
     }
 
     [HttpGet("on-year/{year:int}")]
-    [ProducesResponseType(typeof(List<Movie>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<MovieTitle>), StatusCodes.Status200OK)]  // Corrected to match the actual return type
     public async Task<IActionResult> GetYear(int year)
     {
+        var startDate = new DateTime(year, 1, 1);
+        var endDate = new DateTime(year + 1, 1, 1);
+
         List<MovieTitle> movieTitles = await _moviesContext.Movies
-            .Include(movie => movie.Genre)
-            .Where(movie => movie.ReleaseDate.Year == year)
+            .Where(movie => movie.ReleaseDate >= startDate && movie.ReleaseDate < endDate)
             .Select(movie => new MovieTitle() { Id = movie.Id, Title = movie.Title })
             .ToListAsync();
 
