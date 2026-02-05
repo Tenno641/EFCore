@@ -53,19 +53,16 @@ public class MoviesController : Controller
         return Ok(movies);
     }
 
-    [HttpGet("on-year/{year:int}")]
-    [ProducesResponseType(typeof(List<MovieTitle>), StatusCodes.Status200OK)]  // Corrected to match the actual return type
-    public async Task<IActionResult> GetYear(int year)
+    [HttpGet("on-year/{date:datetime}")]
+    [ProducesResponseType(typeof(List<MovieTitle>), StatusCodes.Status200OK)]  
+    public async Task<IActionResult> GetYear(DateTime date)
     {
-        var startDate = new DateTime(year, 1, 1);
-        var endDate = new DateTime(year + 1, 1, 1);
-
-        List<MovieTitle> movieTitles = await _moviesContext.Movies
-            .Where(movie => movie.ReleaseDate >= startDate && movie.ReleaseDate < endDate)
-            .Select(movie => new MovieTitle() { Id = movie.Id, Title = movie.Title })
+        var movies = await _moviesContext.Movies
+            .Include(movie => movie.Genre)
+            .Where(movie => movie.ReleaseDate == date)
             .ToListAsync();
 
-        return Ok(movieTitles);
+        return Ok(movies);
     }
     
     [HttpPost]

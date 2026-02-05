@@ -18,7 +18,8 @@ public class GenreMappings : IEntityTypeConfiguration<Genre>
             .HasDefaultValueSql("now()");*/
 
         builder
-            .Property(genre => genre.CreatedAt)
+            .Property<DateTime>("CreatedAt")
+            .HasColumnName("CreatedAt")
             .HasValueGenerator<DateTimeValueGenerator>();
         
         // Seed(builder); Causing Infinity Time!

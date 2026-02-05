@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using EFCore.API.Data.ValueConvertors;
 using EFCore.API.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -40,7 +39,9 @@ public class MovieMappings : IEntityTypeConfiguration<Movie>
 
         builder
             .OwnsMany(movie => movie.Actors);
-        
+
+        builder
+            .HasQueryFilter(movie => movie.ReleaseDate >= new DateTime(1999, 1, 1));
 
         /* Custom Convertor
         builder
