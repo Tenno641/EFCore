@@ -42,7 +42,7 @@ public class GenreTests : IDisposable
     }
     
     [Fact]
-    public async Task Test1()
+    public async Task GetGenre_SuccessfulResult_ExistingId()
     {
         // Arrange
         MoviesContext context = CreateInMemoryDatabase();
@@ -60,7 +60,9 @@ public class GenreTests : IDisposable
 
     private MoviesContext CreateInMemoryDatabase()
     {
-        DbContextOptions<MoviesContext> dbContextOptions = new DbContextOptionsBuilder<MoviesContext>().UseSqlite(_connection).Options;
+        DbContextOptions<MoviesContext> dbContextOptions = new DbContextOptionsBuilder<MoviesContext>()
+            .UseSqlite(_connection)
+            .Options;
 
         return new MoviesContext(dbContextOptions);
     }
