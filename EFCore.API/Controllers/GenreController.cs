@@ -27,6 +27,19 @@ public class GenreController : Controller
         return Ok(movies);
     }
 
+    [HttpGet("genres/{id:int}")]
+    [ProducesResponseType(typeof(Genre), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetGenre(int id)
+    {
+        Genre? genre = await _moviesContext.Genres
+            .SingleOrDefaultAsync(genre => genre.Id == id);
+
+        if (genre is null)
+            return NotFound();
+
+        return Ok(genre);
+    }
+
     [HttpPost]
     [ProducesResponseType(typeof(Genre), StatusCodes.Status201Created)]
     public async Task<IActionResult> Post(Genre genre)
