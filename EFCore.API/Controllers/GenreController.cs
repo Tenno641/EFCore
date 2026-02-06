@@ -32,7 +32,7 @@ public class GenreController : Controller
     public async Task<IActionResult> GetGenre(int id)
     {
         Genre? genre = await _moviesContext.Genres
-            .SingleOrDefaultAsync(genre => genre.Id == id);
+            .FindAsync(id);
 
         if (genre is null)
             return NotFound();

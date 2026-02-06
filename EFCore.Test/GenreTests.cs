@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EFCore.Test;
 
-public class GenreTests : IDisposable
+public class GenreInMemoryTests : IDisposable
 {
     private readonly SqliteConnection _connection;
-    public GenreTests()
+    public GenreInMemoryTests()
     {
         _connection = new SqliteConnection("Filename=:memory:");
         _connection.Open();
