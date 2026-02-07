@@ -1,6 +1,8 @@
 ﻿using EFCore.API.Controllers;
 using EFCore.API.Data;
 using EFCore.API.Models;
+using EFCore.API.Repositories;
+using EFCore.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MockQueryable.Moq;
@@ -15,10 +17,10 @@ public class GenreFakeDbSetTests
     {
         // Arrange
         MoviesContext moviesContext = CreateFakeDbContext();
-        GenreController controller = new GenreController(moviesContext);
+        GenreController controller = CreateMockedController();
         
         // Act
-        IActionResult genre = await controller.GetGenre(2);
+        IActionResult genre = await controller.Get(2);
         OkObjectResult? result = genre as OkObjectResult;
 
         // Assert
@@ -58,5 +60,18 @@ public class GenreFakeDbSetTests
             .Returns(genresDbSetMock.Object);
     
         return moviesContextMock.Object;
+    }
+    
+    private GenreController CreateMockedController()
+    {
+        Mock<IGenreRepository> genreRepositoryMock = new Mock<IGenreRepository>();
+        genreRepositoryMock.Setup(repo => repo.Get(2))
+            .ReturnsAsync(new Genre
+            {
+                Id = 2,
+                Name = "Comedy"
+            });
+        
+        return new GenreController(genreRepositoryMock.Object, null);
     }
 }

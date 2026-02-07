@@ -1,9 +1,11 @@
 ﻿using EFCore.API.Controllers;
 using EFCore.API.Data;
 using EFCore.API.Models;
+using EFCore.API.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace EFCore.Test;
 
@@ -46,10 +48,10 @@ public class GenreInMemoryTests : IDisposable
     {
         // Arrange
         MoviesContext context = CreateInMemoryDatabase();
-        GenreController controller = new GenreController(context);
+        GenreController controller = CreateMockedController();
         
         // Act
-        IActionResult genre = await controller.GetGenre(2);
+        IActionResult genre = await controller.Get(2);
         OkObjectResult? result = genre as OkObjectResult;
         
         // Assertion 
@@ -65,5 +67,18 @@ public class GenreInMemoryTests : IDisposable
             .Options;
 
         return new MoviesContext(dbContextOptions);
+    }
+
+    private GenreController CreateMockedController()
+    {
+        Mock<IGenreRepository> genreRepositoryMock = new Mock<IGenreRepository>();
+        genreRepositoryMock.Setup(repo => repo.Get(2))
+            .ReturnsAsync(new Genre
+            {
+                Id = 2,
+                Name = "Comedy"
+            });
+        
+        return new GenreController(genreRepositoryMock.Object, null);
     }
 }

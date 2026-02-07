@@ -1,6 +1,8 @@
 using System.Text.Json.Serialization;
 using EFCore.API.Data;
 using EFCore.API.Models;
+using EFCore.API.Repositories;
+using EFCore.API.Services;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -18,6 +20,10 @@ builder.Services.AddDbContext<MoviesContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres"));
 });
+
+builder.Services.AddScoped<IBatchService, BatchService>();
+builder.Services.AddScoped<IGenreRepository, GenreRepository>();
+builder.Services.AddScoped<IUnitOfWorkManager, UnitOfWorkManger>();
 
 var app = builder.Build();
 
