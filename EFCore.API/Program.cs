@@ -4,6 +4,7 @@ using EFCore.API.Models;
 using EFCore.API.Repositories;
 using EFCore.API.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +15,34 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter<AgeRating>());
     });
 
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer((document, _, _) =>
+    {
+        foreach (var path in document.Paths.Values)
+        {
+            if (path.Operations is null) continue;
+            foreach (var operation in path.Operations.Values)
+            {
+                if (operation.Parameters is null)
+                    operation.Parameters = new List<IOpenApiParameter>();
+                
+                operation.Parameters.Add(new OpenApiParameter
+                {
+                    In = ParameterLocation.Header,
+                    Name = "X-Tenant",
+                    Required = true,
+                    Schema = new OpenApiSchema
+                    {
+                        Type = JsonSchemaType.String
+                    },
+                });        
+            }
+        }
+         
+        return Task.CompletedTask;
+    });
+});
 
 builder.Services.AddDbContext<MoviesContext>(options =>
 {
