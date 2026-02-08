@@ -38,6 +38,10 @@ public class GenreRepository : IGenreRepository
     {
         await _context.Genres.AddAsync(genre);
 
+        _context.Entry(genre)
+            .Property<string?>("tenant_id")
+            .CurrentValue = _context.TenantId;
+
         if(!_uowManager.IsUnitOfWorkStarted)
             await _context.SaveChangesAsync();
 

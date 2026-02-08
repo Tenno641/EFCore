@@ -20,6 +20,8 @@ builder.Services.AddTenantOpenApi();
 builder.Services.AddDbContext<MoviesContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres"));
+    options.EnableSensitiveDataLogging();
+    options.LogTo(Console.WriteLine);
 });
 
 builder.Services.AddScoped<IBatchService, BatchService>();
@@ -27,6 +29,7 @@ builder.Services.AddScoped<IGenreRepository, GenreRepository>();
 builder.Services.AddScoped<IUnitOfWorkManager, UnitOfWorkManger>();
 
 builder.Services.AddScoped<ITenantService, TenantService>();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 

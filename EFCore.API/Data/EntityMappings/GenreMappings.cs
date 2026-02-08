@@ -1,22 +1,25 @@
 ﻿using EFCore.API.Data.ValueGenerators;
 using EFCore.API.Models;
+using EFCore.API.Tenants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EFCore.API.Data.EntityMappings;
 
-public class GenreMappings : IEntityTypeConfiguration<Genre>
+public class GenreMappings : TenantAwareMapping<Genre>
 {
-    public void Configure(EntityTypeBuilder<Genre> builder)
+    public GenreMappings(MoviesContext context) : base(context) { }
+    
+    protected override void ConfigureEntity(EntityTypeBuilder<Genre> builder)
     {
         builder
             .Property(genre => genre.Name)
             .HasMaxLength(128);
-        
+                
         /*builder
             .Property(genre => genre.CreatedAt)
             .HasDefaultValueSql("now()");*/
-
+        
         builder
             .Property<DateTime>("CreatedAt")
             .HasColumnName("CreatedAt")
@@ -24,6 +27,7 @@ public class GenreMappings : IEntityTypeConfiguration<Genre>
         
         // Seed(builder); Causing Infinity Time!
     }
+    
     private void Seed(EntityTypeBuilder<Genre> builder)
     {
         builder.HasData(new Genre()

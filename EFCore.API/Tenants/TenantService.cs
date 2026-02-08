@@ -24,7 +24,7 @@ public class TenantService : ITenantService
             return _tenantId;
 
         KeyValuePair<string, StringValues>? header = _httpContextAccessor.HttpContext?.Request.Headers
-            .FirstOrDefault(header => header.Key.Equals("X-Tenant"));
+            .FirstOrDefault(header => header.Key.Equals("X-Tenant", StringComparison.InvariantCultureIgnoreCase));
 
         if (header is null) return _tenantId;
 

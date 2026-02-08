@@ -2,6 +2,7 @@
 using EFCore.API.Data;
 using EFCore.API.Models;
 using EFCore.API.Repositories;
+using EFCore.API.Tenants;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -66,7 +67,11 @@ public class GenreInMemoryTests : IDisposable
             .UseSqlite(_connection)
             .Options;
 
-        return new MoviesContext(dbContextOptions);
+        Mock<ITenantService> tenantServiceMock = new Mock<ITenantService>();
+        tenantServiceMock.Setup(service => service.GetTenantId())
+            .Returns("Defined-Tenant");
+
+        return new MoviesContext(dbContextOptions, tenantServiceMock.Object);
     }
 
     private GenreController CreateMockedController()
