@@ -16,7 +16,9 @@ public class MoviesContext : DbContext
 
     public string? TenantId => _tenantService.GetTenantId();
     public DbSet<Movie> Movies { get; init; }
+    public DbSet<ExternalInformation> ExternalInformation { get; set; }
     public virtual DbSet<Genre> Genres { get; init; } // Virtual For Testing Purposes
+    public DbSet<Actor> Actors { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -24,5 +26,7 @@ public class MoviesContext : DbContext
 
         modelBuilder.ApplyConfiguration(new MovieMappings());
         modelBuilder.ApplyConfiguration(new GenreMappings(this));
+        modelBuilder.ApplyConfiguration(new ExternalInformationMappings());
+        modelBuilder.ApplyConfiguration(new ActorMappings());
     }
 }

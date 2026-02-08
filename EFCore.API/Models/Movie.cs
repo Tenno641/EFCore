@@ -9,14 +9,14 @@ public class Movie
     public DateTime ReleaseDate { get; set; }
     public string? Synopsis { get; set; }
     public AgeRating? AgeRating { get; set; }
-    
     public Person? Director { get; set; }
-    public ICollection<Person>? Actors { get; set; }
+    public ICollection<Actor> Actors { get; set; }
     // Navigation properties 
     [JsonIgnore]
     public Genre? Genre { get; set; }
+    public ExternalInformation? ExternalInformation { get; set; }
     // Foreign keys
-    public int GenreId { get; set; }
+    public int? GenreId { get; set; }
 }
 
 public enum AgeRating

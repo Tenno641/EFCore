@@ -20,7 +20,9 @@ public class MoviesController : Controller
     public async Task<IActionResult> GetAll()
     {
         var movies = await _moviesContext.Movies
+            .Include(movie => movie.Actors)
             .Include(movie => movie.Genre)
+            .Include(movie => movie.ExternalInformation)
             .ToListAsync();
 
         return Ok(movies);

@@ -38,9 +38,6 @@ public class MovieMappings : IEntityTypeConfiguration<Movie>
             .ToTable("Directors");
 
         builder
-            .OwnsMany(movie => movie.Actors);
-
-        builder
             .HasQueryFilter(movie => movie.ReleaseDate >= new DateTime(1999, 1, 1));
 
         /* Custom Convertor
