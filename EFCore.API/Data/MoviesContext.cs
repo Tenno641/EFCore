@@ -1,4 +1,5 @@
 ﻿using EFCore.API.Data.EntityMappings;
+using EFCore.API.Data.Interceptors;
 using EFCore.API.Models;
 using EFCore.API.Tenants;
 using Microsoft.EntityFrameworkCore;
@@ -28,5 +29,11 @@ public class MoviesContext : DbContext
         modelBuilder.ApplyConfiguration(new GenreMappings(this));
         modelBuilder.ApplyConfiguration(new ExternalInformationMappings());
         modelBuilder.ApplyConfiguration(new ActorMappings());
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+        optionsBuilder.AddInterceptors(new SaveChangesInterceptors());
     }
 }
