@@ -25,6 +25,14 @@ public class GenreMappings : TenantAwareMapping<Genre>
             .HasColumnName("CreatedAt")
             .HasValueGenerator<DateTimeValueGenerator>();
         
+        builder
+            .Property<bool>("Deleted")
+            .HasDefaultValue(false);
+
+        builder
+            .HasQueryFilter(genre => EF.Property<bool>(genre, "Deleted") == false)
+            .HasAlternateKey(genre => genre.Name);
+        
         // Seed(builder); Causing Infinity Time!
     }
     
